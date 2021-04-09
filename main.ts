@@ -1,9 +1,15 @@
 import { Application } from "https://deno.land/x/oak/mod.ts";
 
+import todosRoutes from './routes/todos.ts';
+
 const app = new Application();
 
-app.use((ctx) => {
-  ctx.response.body = "Hello world!";
+app.use(async (ctx, next) => {
+  console.log('Middleware!');
+  await next();
 });
 
-await app.listen("127.0.0.1:8000");
+app.use(todosRoutes.routes());
+app.use(todosRoutes.allowedMethods());
+
+await app.listen({ port: 3000 });
